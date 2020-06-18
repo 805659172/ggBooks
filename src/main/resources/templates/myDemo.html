@@ -6,6 +6,12 @@
 </head>
 <style type="text/css">
 
+    .PathInner {
+        position: relative;
+        width: 60px;
+        height: 60px;
+    }
+
     .PathInner .rotate {
         width: 100%;
         height: 100%;
@@ -19,7 +25,7 @@
     }
 
     .PathInner .PathMain {
-        z-index: 100;
+        z-index: 1000;
         position: absolute;
         display: block; /* overflow:hidden; */
         background-position: center;
@@ -36,7 +42,7 @@
 
     .PathInner .PathMain .Tmain .rotate {
         /*background-image: url(images/icon-2x.png);*/
-        background-image: url(images/bg-2x.png);
+        background-image: url(images/icon-2x.png);
         -moz-transform: rotate(0deg);
         /*position: absolute;*/
         bottom: 0;
@@ -48,7 +54,7 @@
         height: 100%;
         display: block;
         background: url(images/bg-hl-2x.png) center no-repeat;
-        cursor: pointer;
+        cursor: pointer;/* 鼠标的形状 */
         filter: alpha(opacity=0) \0;
         opacity: 0;
         -webkit-transition: opacity .2s ease-out;/*指定发生变化的属性，制定发生变化的时间，定义动画的变化时间曲线 还有一个：指定在变换开始之前的时间延迟 */
@@ -57,39 +63,126 @@
         -o-transition: opacity .2s ease-out;
     }
 
+    /* 鼠标放到按钮上是使深色背景图片显现出来 */
     .PathInner .cover:hover {
         opacity: 0.2;
         filter: alpha(opacity=20) \0;
     }
 
+    .PathInner .PathItem {
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+    }
+
+    .PathItem .link {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 60px;
+        background-image: url(images/bg-item-2x.png);
+    }
+
+    .PathItem .link .item {
+        bottom: 0;
+        left: 0;
+    }
+
+    .PathInner a { /* position:absolute; */
+        display: block;
+        /* overflow:hidden; */
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 999;
+    }
+
+    .PathInner a .item, .rotate {
+        width: 100%;
+        height: 100%;
+        background-position: center;
+        /*background-repeat: no-repeat;*/
+        display: block;
+        /*overflow: hidden;*/
+        /*text-align: center;*/
+        /*vertical-align: middle;*/
+        /*position: absolute;*/
+    }
+
 </style>
 <script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/jquery.transform.js}"></script>
+<script type="text/javascript">
+    // $(document).ready(function () {
+    //
+    //     $(".PathItem").hover(function () {
+    //         $(this).find(".metaicondetail").show();
+    //     }, function () {
+    //         $(this).find(".metaicondetail").hide();
+    //     });
+    //
+    // });
+</script>
 <body>
     <div class="PathInner" id="PathMenu" style="margin-left:200px;margin:300px;">
-        <div class="PathMain">
-            <div class="Tmain" onclick="PathRun();">
-                <div class="rotate"><span class="cover"></span></div>
+
+        <div class="PathMain"><!-- 这一层不知道干什么用的 -_-!  -->
+            <div class="Tmain" onclick="PathRun();"><!-- 用来存放最外层的红色背景图片 ，点击事件：用来触发按钮的旋转  -->
+                <div class="rotate"><!-- 用来存放中间的白色十字图片    注：这里是不是应该放到最里面 -->
+                    <span class="cover"></span><!-- 用来存放深色图片 -->
+                </div>
             </div>
         </div>
-        <div class="PathItem">
-            <a class="link" href="#" title="更多图片">
-                <span class="item" style="background-image: url(images/moment_icn_pic.png);"></span>
+        <div class="PathItem" >
+            <a class="link" href="#" title="更多图片"><!-- 用来存放小图标中间的图案 -->
+                <span class="item" style="background-image: url(images/moment_icn_pic.png);"></span><!-- 用来存放黑色的背景图 -->
             </a>
         </div>
 
     </div>
 </body>
 <script type="text/javascript">
-    var PathStatus 	= 0;
+    var PathStatus 	= 0;//相当于按钮的状态 0:关闭中，1：打开中
+
+    var Radius 		= 100;		//小图出来的半径
+    var Offset 		= 40;		//小图出来后的偏移量
+    var Path 		= 4;		//出现方式，1：左上，2:左下，3：右上，4：右下
+    var OutSpeed 	= 80;		//小图出现的速度
+    var OutIncr 	= 50;		//小图出来的旋转
+    var OffsetSpeed = 200;		//小图出来的旋转速度
+    var InSpeed 	= 480;		//小图进去的速度
+    var InIncr 		= -80;		//小图进去的旋转
 
     function PathRun(){
         var PathMenu = $('#PathMenu');
+        var PathItems = PathMenu.children('.PathItem');
         if(PathStatus == 0){
-            $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:-405}, 200);
-            PathStatus = 1;
+            $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:-405}, 200);//选装装有十字图片的div，animate以一种速度变化一种属性，产生动画效果
         }else if(PathStatus == 1){
             $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:0}, 200);
+        }
+
+        PathItems.each(function (SP) {
+            var X 	= Radius;
+            var Y 	= 0;
+            var X1 	= X + Offset;
+            var Y1 	= Y;
+            if(PathStatus == 0){
+                $(this).children().children().animate({rotate:720},600);
+                $(this).animate({left:X1,bottom:Y1},OutSpeed+SP*OutIncr,function(){
+                    $(this).animate({left:X,bottom:Y},OffsetSpeed);
+                });
+            }else if(PathStatus == 1){
+                $(this).children().children().animate({rotate:0},600);
+                $(this).animate({left:X1,bootom:Y1},OffsetSpeed,function () {
+                    $(this).animate({left:0,bootom:0},InSpeed+SP*InIncr);
+                });
+            }
+        })
+
+        if(PathStatus == 0){
+            PathStatus = 1;
+        }else{
             PathStatus = 0;
         }
     }

@@ -20,10 +20,20 @@ public class HelloSpringBoot {
 
     @RequestMapping("/myDemo")
     public String sayHello(){
+        printMessage();
+        return "myDemo";
+    }
+
+    @RequestMapping("/demo")
+    public String demo(){
+        printMessage();
+        return "demo";
+    }
+
+    public void printMessage(){
         System.out.println("template:" + template);
         System.out.println("user:" + person.getName());
         System.out.println("user:" + person.getAge());
         System.out.println("userName:" + userMapper.getList().get(0).getsName() + "!");
-        return "myDemo";
     }
 }

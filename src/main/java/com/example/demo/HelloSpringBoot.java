@@ -30,6 +30,12 @@ public class HelloSpringBoot {
         return "demo";
     }
 
+    @RequestMapping("/vue")
+    public String vue(){
+        printMessage();
+        return "vue";
+    }
+
     public void printMessage(){
         System.out.println("template:" + template);
         System.out.println("user:" + person.getName());

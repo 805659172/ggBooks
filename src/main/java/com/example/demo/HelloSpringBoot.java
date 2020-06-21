@@ -52,7 +52,7 @@ public class HelloSpringBoot {
     @RequestMapping("/add")
     public String add(){
         User user = new User();
-        user.setID(2);
+        //user.setID(2);
         user.setsAccountNO("222");
         user.setsPassword("222");
         user.setsName("222");

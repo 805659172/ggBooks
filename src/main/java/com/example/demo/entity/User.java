@@ -1,11 +1,16 @@
 package com.example.demo.entity;
 
 public class User {
-    private Integer ID;
-    private String sAccountNO;
-    private String sPassword;
-    private String sName;
-    private Integer nStatusID;
+
+    private Integer ID;//主键id
+
+    private String sAccountNO;//账户号
+
+    private String sPassword;//密码
+
+    private String sName;//用户名
+
+    private Integer nStatusID;//用户状态；0：无效，1：有效
 
     public Integer getID() {
         return ID;
@@ -45,5 +50,16 @@ public class User {
 
     public void setsAccountNO(String sAccountNO) {
         this.sAccountNO = sAccountNO;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "ID=" + ID +
+                ", sAccountNO='" + sAccountNO + '\'' +
+                ", sPassword='" + sPassword + '\'' +
+                ", sName='" + sName + '\'' +
+                ", nStatusID=" + nStatusID +
+                '}';
     }
 }

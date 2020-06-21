@@ -2,6 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 名称空间，用来区分Mapper接口，Mapper接口的全限定路径 -->
 <mapper namespace="com.example.demo.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="com.example.demo.entity.User">
         <id column="ID" property="ID" jdbcType="INTEGER"/>
@@ -19,4 +20,16 @@
         from user
         where 1=1
     </select>
+
+    <insert id="add" parameterType="com.example.demo.entity.User">
+        insert into user (ID,sAccountNO,sPassword,sName,nStatusID) values (#{ID},#{sAccountNO},#{sPassword},#{sName},#{nStatusID})
+    </insert>
+
+    <select id="findByID" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/> from user where ID = #{id}
+    </select>
+
+<!--    <select id="insertUser" parameterType="com.example.demo.entity.User">-->
+<!--        insert into user(id,name,sex)-->
+<!--    </select>-->
 </mapper>

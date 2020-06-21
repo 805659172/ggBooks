@@ -112,6 +112,7 @@
 </style>
 <script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/jquery.transform.js}"></script>
+<script src="js/vue.js"></script>
 <script type="text/javascript">
     // $(document).ready(function () {
     //
@@ -138,12 +139,50 @@
                 <span class="item" style="background-image: url(images/moment_icn_pic.png);"></span><!-- 用来存放黑色的背景图 -->
             </a>
         </div>
+        <div class="PathItem" >
+            <a class="link" href="#" title="地址"><!-- 用来存放小图标中间的图案 -->
+                <span class="item" style="background-image: url(images/moment_icn_address.png);"></span><!-- 用来存放黑色的背景图 -->
+            </a>
+        </div>
+        <div class="PathItem" >
+            <a class="link" href="#" title="更多信息"><!-- 用来存放小图标中间的图案 -->
+                <span class="item" style="background-image: url(images/moment_icn_info.png);"></span><!-- 用来存放黑色的背景图 -->
+            </a>
+        </div>
+        <div class="PathItem" >
+            <a class="link" href="#" title="价格"><!-- 用来存放小图标中间的图案 -->
+                <span class="item" style="background-image: url(images/moment_icn_price.png);"></span><!-- 用来存放黑色的背景图 -->
+            </a>
+        </div>
 
+    </div>
+
+    <div id="controller">
+        <p>{{Radius}}</p>
+        <input v-model="Radius">
+    </div>
+    <div id="app-6">
+        <p>{{ message }}</p>
+        <input v-model="message">
     </div>
 </body>
 <script type="text/javascript">
-    var PathStatus 	= 0;//相当于按钮的状态 0:关闭中，1：打开中
 
+    var radiusVue = new Vue({
+        el:'#controller',
+        data:{
+            Radius:100
+        }
+    })
+    var app6 = new Vue({
+        el: '#app-6',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+
+    var PathStatus 	= 0;//相当于按钮的状态 0:关闭中，1：打开中
+    var angle 		= Math.PI/((4-1)*2);
     var Radius 		= 100;		//小图出来的半径
     var Offset 		= 40;		//小图出来后的偏移量
     var Path 		= 4;		//出现方式，1：左上，2:左下，3：右上，4：右下
@@ -156,35 +195,113 @@
     function PathRun(){
         var PathMenu = $('#PathMenu');
         var PathItems = PathMenu.children('.PathItem');
+        // if(PathStatus == 0){
+        //     var Count = PathItems.size();
+        //     PathItems.each(function (SP) {
+        //         var X 	= Radius;
+        //         var Y 	= 0;
+        //         var X1 	= X + Offset;
+        //         var Y1 	= Y;
+        //
+        //         var ID = $(this).index();
+        //         if (ID == 1) {
+        //             X 	= Radius;
+        //             Y 	= 0;
+        //             X1 	= X + Offset;
+        //             Y1 	= Y;
+        //         }else if (ID == Count){
+        //             X 	= 0;
+        //             Y 	= Radius;
+        //             X1 	= X;
+        //             Y1 	= Y + Offset;
+        //         }else{
+        //             X 	= Math.cos(angle * (ID - 1)) * Radius;
+        //             Y 	= Math.sin(angle * (ID - 1)) * Radius;
+        //             X1	= X + Offset;
+        //             Y1 	= Y + Offset;
+        //         }
+        //
+        //         $(this).children().children().animate({rotate:720},600);
+        //         $(this).animate({left:X1,bottom:Y1},OutSpeed+SP*OutIncr,function(){
+        //             $(this).animate({left:X,bottom:Y},OffsetSpeed);
+        //         });
+        //     })
+        //     $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:-405}, 200);//选装装有十字图片的div，animate以一种速度变化一种属性，产生动画效果
+        //     PathStatus = 1;
+        // }else if(PathStatus == 1){
+        //     PathItems.each(function (SP) {
+        //         var X 	= Radius;
+        //         var Y 	= 0;
+        //         if(parseInt($(this).css('left')) != 0){
+        //             var X1 	= parseInt($(this).css('left')) + Offset;
+        //         }
+        //
+        //         if(parseInt($(this).css('bottom')) != 0){
+        //             var Y1 	= parseInt($(this).css('bottom')) + Offset;
+        //         }
+        //
+        //         $(this).children().children().animate({rotate:0},600);
+        //         $(this).animate({left:X1,bottom:Y1},OffsetSpeed,function () {
+        //             $(this).animate({left:0,bottom:0},InSpeed+SP*InIncr);
+        //         });
+        //     })
+        //     $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:0}, 200);
+        //     PathStatus = 0;
+        // }
         if(PathStatus == 0){
-            $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:-405}, 200);//选装装有十字图片的div，animate以一种速度变化一种属性，产生动画效果
-        }else if(PathStatus == 1){
-            $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:0}, 200);
-        }
+            var Count = PathItems.size();
+            PathItems.each(function (SP) {
+                var X 	= parseInt(radiusVue.Radius);
+                var Y 	= 0;
+                var X1 	= X + Offset;
+                var Y1 	= Y;
 
-        PathItems.each(function (SP) {
-            var X 	= Radius;
-            var Y 	= 0;
-            var X1 	= X + Offset;
-            var Y1 	= Y;
-            if(PathStatus == 0){
+                var ID = $(this).index();
+                if (ID == 1) {
+                    X 	= parseInt(radiusVue.Radius);
+                    Y 	= 0;
+                    X1 	= X + Offset;
+                    Y1 	= Y;
+                }else if (ID == Count){
+                    X 	= 0;
+                    Y 	= parseInt(radiusVue.Radius);
+                    X1 	= X;
+                    Y1 	= Y + Offset;
+                }else{
+                    X 	= Math.cos(angle * (ID - 1)) * parseInt(radiusVue.Radius);
+                    Y 	= Math.sin(angle * (ID - 1)) * parseInt(radiusVue.Radius);
+                    X1	= X + Offset;
+                    Y1 	= Y + Offset;
+                }
+
                 $(this).children().children().animate({rotate:720},600);
                 $(this).animate({left:X1,bottom:Y1},OutSpeed+SP*OutIncr,function(){
                     $(this).animate({left:X,bottom:Y},OffsetSpeed);
                 });
-            }else if(PathStatus == 1){
-                $(this).children().children().animate({rotate:0},600);
-                $(this).animate({left:X1,bootom:Y1},OffsetSpeed,function () {
-                    $(this).animate({left:0,bootom:0},InSpeed+SP*InIncr);
-                });
-            }
-        })
-
-        if(PathStatus == 0){
+            })
+            $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:-405}, 200);//选装装有十字图片的div，animate以一种速度变化一种属性，产生动画效果
             PathStatus = 1;
-        }else{
+        }else if(PathStatus == 1){
+            PathItems.each(function (SP) {
+                var X 	= parseInt(radiusVue.Radius);
+                var Y 	= 0;
+                if(parseInt($(this).css('left')) != 0){
+                    var X1 	= parseInt($(this).css('left')) + Offset;
+                }
+
+                if(parseInt($(this).css('bottom')) != 0){
+                    var Y1 	= parseInt($(this).css('bottom')) + Offset;
+                }
+
+                $(this).children().children().animate({rotate:0},600);
+                $(this).animate({left:X1,bottom:Y1},OffsetSpeed,function () {
+                    $(this).animate({left:0,bottom:0},InSpeed+SP*InIncr);
+                });
+            })
+            $(PathMenu.children('.PathMain').find('.rotate')).animate({rotate:0}, 200);
             PathStatus = 0;
         }
+
     }
 </script>
 </html>

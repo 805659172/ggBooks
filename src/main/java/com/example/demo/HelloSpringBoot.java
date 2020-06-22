@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 public class HelloSpringBoot {
@@ -63,11 +66,33 @@ public class HelloSpringBoot {
         return "myDemo";
     }
 
+    @RequestMapping("/ggBooks")
+    public String ggBooks(){
+        return "login";
+    }
+
+
+    @RequestMapping("/login")
+    public String login(User user){
+        System.out.println(user.toString());
+        User findUser = userMapper.findByAccountNO(user.getsAccountNO());
+        if(findUser == null){
+            return "login";
+        }else {
+            System.out.println(findUser.toString());
+            if (findUser.getsPassword().equals(user.getsPassword())){
+                return "main";
+            }else {
+                return "login";
+            }
+        }
+    }
+
     public void printMessage(){
         System.out.println("template:" + template);
         System.out.println("user:" + person.getName());
         System.out.println("user:" + person.getAge());
-        System.out.println("userName:" + userMapper.getList().get(0).getsName() + "!");
-        System.out.println("userMessage:" + userMapper.getList().get(0).toString());
+        System.out.println("userName:" + userMapper.findAll().get(0).getsName() + "!");
+        System.out.println("userMessage:" + userMapper.findAll().get(0).toString());
     }
 }

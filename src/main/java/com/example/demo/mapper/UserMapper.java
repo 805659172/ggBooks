@@ -15,9 +15,12 @@ import java.util.List;
 @Mapper
 @Component
 public interface UserMapper {
-    public List<User> getList();
+    public List<User> findAll();
 
     public void add(User user);
 
     public User findByID(Integer ID);
+
+    public User findByAccountNO(String sAccountNO);
+
 }
